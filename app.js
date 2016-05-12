@@ -8,9 +8,16 @@ var express = require('express');
 var config = require('./config');
 var database = require('./database')(config);
 var userApi = require('./routes/user-api')(database);
+var bodyParser = require('body-parser');
 
 //create the express application
 var app = express();
+
+//parse multipart forms : application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//parse all application/json
+app.use(bodyParser.json());
 
 /**
  * @param  {path} '/'
