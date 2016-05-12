@@ -22,9 +22,7 @@ module.exports = function Router(db) {
      * @param  {callback} function(req, res)
      * @desc This method will return all the users in the table
      */
-    router.get('/' , function (req, res) {
-        
-        console.log('running user get function');        
+    router.get('/' , function (req, res) {        
         
         db.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
            if(err) {
@@ -40,6 +38,11 @@ module.exports = function Router(db) {
                });
            }
         });
+    });
+    
+    router.post('/', function (req, res) {
+        console.log('posting to user table');
+        console.log(req.body);
     });
     
     return router;
