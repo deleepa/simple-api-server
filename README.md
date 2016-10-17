@@ -6,10 +6,12 @@ Eventually this I want to have a user login module as well, since that's a reall
 
 ## Installation
 
-`git clone https://github.com/deleepa/simple-api.git`
-`cd simple-api`
-`npm install`
-`node app.js`
+```
+git clone https://github.com/deleepa/simple-api.git
+cd simple-api
+npm install
+node app.js
+```
 
 ## Tests
 
