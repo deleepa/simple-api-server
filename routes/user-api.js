@@ -26,26 +26,50 @@ module.exports = function Router(db) {
      * @param  {callback} function(req, res)
      * @desc This method will return all the users in the table
      */
-    router.get('/' , function (req, res) {        
+    router.get('/' , function (req, res) {     
         
-        db.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
-           if(err) {
-               res.status(500).json({
-                   "status": false,
-                   "message": err
-               });
+        var userEmail = req.get('email');
+        
+        if(userEmail != undefined) {
+            db.query('SELECT * FROM ' + TABLE_NAME + 'WHERE email=' + userEmail, function(err, rows) {
+                if(err) {
+                    res.status(500).json({
+                        "status": false,
+                        "message": err
+                    });
                
-               return;
-           } 
-           else {
-               res.status(200).json({
-                   "status": true,
-                   "message": rows
-               });
+                    return;
+                } 
+                else {
+                    res.status(200).json({
+                        "status": true,
+                        "message": rows
+                    });
                
-               return;
-           }
-        });
+                    return;
+                }
+            });
+        }   
+        else {
+            db.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
+                if(err) {
+                    res.status(500).json({
+                        "status": false,
+                        "message": err
+                    });
+               
+                    return;
+                } 
+                else {
+                    res.status(200).json({
+                        "status": true,
+                        "message": rows
+                    });
+               
+                    return;
+                }
+            });
+        }
     });
     
     router.post('/', function (req, res) {
