@@ -6,6 +6,20 @@ Eventually this I want to have a user login module as well, since that's a reall
 
 ## Installation
 
+### Set up the database
+
+The server is designed to connect to a MySQL database. Since most people learn SQL before any other type of database. The user table creation script can be found in the `scripts` folder. The same code is also shown below:
+
+```
+create table user (
+	id int auto_increment not null primary key,
+    email varchar(255),
+    password varchar(255)
+);
+
+```
+
+### Set up the project
 ```
 git clone https://github.com/deleepa/simple-api.git
 cd simple-api
