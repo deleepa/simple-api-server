@@ -4,6 +4,13 @@ This project is intended to serve as a starting point for anyone that wants to s
 
 Eventually this I want to have a user login module as well, since that's a really basic feature that's part of any API server application. Authenticated routes would also be included.
 
+### Stack
+
+The stack that I've used for this server is:
+* NodeJS with ExpressJS
+* MySQL database
+* Mocha with Supertest and Should for testing
+
 ## Installation
 
 ### Set up the database
