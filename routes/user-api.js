@@ -18,7 +18,7 @@ const TABLE_NAME = "user";
 //salt to be used with cipher
 const CIPHER_SALT = "salt";
 
-module.exports = function Router(db) {
+module.exports = function Router(connection) {
 
     console.log('setting router..');
     /**
@@ -27,8 +27,8 @@ module.exports = function Router(db) {
      * @desc This method will return all the users in the table
      */
     router.get('/' , function (req, res) {
-
-        db.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
+        var con = connection();
+        con.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
            if(err) {
                res.status(500).json({
                    "status": false,
@@ -49,6 +49,7 @@ module.exports = function Router(db) {
     });
 
     router.post('/', function (req, res) {
+        var con = connection();
         console.log('posting to user table');
         console.log(req.body);
 
@@ -78,9 +79,7 @@ module.exports = function Router(db) {
         var query = "INSERT INTO " + TABLE_NAME + " (email, password, package_id) " +
                     "VALUES ('" + req.body.email + "', '" + req.body.password + "', 1)";
 
-        console.log(query);
-
-        db.query(query, function(err, rows) {
+        con.query(query, function(err, rows) {
            if(err) {
                res.status(500).json({
                    "status": false,
