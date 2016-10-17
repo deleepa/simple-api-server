@@ -72,6 +72,7 @@ module.exports = function Router(connection) {
             return;
         }
 
+        //create hash of password before inserting to db
         var cipher = crypto.createCipher('aes192', CIPHER_SALT);
         var encryptedPass = cipher.update(req.body.password, 'utf-8', 'hex');
         encryptedPass += cipher.final('hex');

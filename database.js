@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var log = require('debug-logger')('database.js'); 
+var log = require('debug-logger')('database.js');
 
 module.exports = function Database() {
     var config = {
@@ -16,17 +16,18 @@ module.exports = function Database() {
     //create the connection with the database
     var connection = mysql.createConnection(config);
 
-    //connect to the database
     connection.connect(function(err) {
+        //failed attempt - log error
         if(err) {
             console.log("error: " + err.stack);
             return null;
         }
+        //success
         else {
             console.log("success");
             return connection;
         }
     });
-    
+
     return connection;
 };
