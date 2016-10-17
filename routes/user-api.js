@@ -28,7 +28,7 @@ module.exports = function Router(db) {
      */
     router.get('/' , function (req, res) {     
         
-        var userEmail = req.get('email');
+        var userEmail = req.query.email;
         
         if(userEmail != undefined) {
             db.query('SELECT * FROM ' + TABLE_NAME + 'WHERE email=' + userEmail, function(err, rows) {
