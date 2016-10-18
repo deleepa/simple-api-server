@@ -28,7 +28,17 @@ module.exports = function Router(connection) {
      */
     router.get('/' , function (req, res) {
         var con = connection();
-        con.query('SELECT * FROM ' + TABLE_NAME, function(err, rows) {
+        var query = '';
+
+        //check if user is specifying an email
+        if(typeof req.query.email !== 'undefined') {
+            query = 'SELECT * FROM ' + TABLE_NAME + ' WHERE email = "' + req.query.email + '"';
+            console.log(query);
+        } else {
+            query = 'SELECT * FROM ' + TABLE_NAME;
+        }
+
+        con.query(query, function(err, rows) {
            if(err) {
                res.status(500).json({
                    "status": false,
