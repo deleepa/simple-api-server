@@ -34,3 +34,4 @@ node_modules
 
 #Application configuration file
 config.json
+.env
