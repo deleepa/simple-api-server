@@ -57,6 +57,42 @@ module.exports = function Router(connection) {
            }
         });
     });
+    
+    router.delete('/:email', function (req, res) {
+       var con = connection();
+       var query = '';
+       
+       //check if email is provided
+       if(typeof req.params.email == 'undefined') {
+            res.status(500).json({
+                "status": false,
+                "message": "Please provide a registered email."
+            });
+
+            return;
+        }
+        
+       query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"'; 
+       
+       con.query(query, function(err, result) {
+           if(err) {
+               res.status(500).json({
+                   "status": false,
+                   "message": err
+               });
+
+               return;
+           }
+           else {
+               res.status(200).json({
+                   "status": true,
+                   "message": result
+               });
+
+               return;
+           }
+        });
+    });
 
     router.post('/', function (req, res) {
         var con = connection();
