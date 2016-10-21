@@ -33,7 +33,6 @@ module.exports = function Router(connection) {
         //check if user is specifying an email
         if(typeof req.query.email !== 'undefined') {
             query = 'SELECT * FROM ' + TABLE_NAME + ' WHERE email = "' + req.query.email + '"';
-            console.log(query);
         } else {
             query = 'SELECT * FROM ' + TABLE_NAME;
         }
@@ -86,7 +85,9 @@ module.exports = function Router(connection) {
            else {
                res.status(200).json({
                    "status": true,
-                   "message": result
+                   "message": [{
+                       "email" : req.params.email
+                    }]
                });
 
                return;
@@ -97,8 +98,6 @@ module.exports = function Router(connection) {
     router.post('/', function (req, res) {
         var con = connection();
         console.log('posting to user table');
-        console.log(req.body);
-
         //validate email address
         if(!validator.isEmail(req.body.email)) {
             res.status(500).json({
@@ -123,8 +122,8 @@ module.exports = function Router(connection) {
         var encryptedPass = cipher.update(req.body.password, 'utf-8', 'hex');
         encryptedPass += cipher.final('hex');
 
-        var query = "INSERT INTO " + TABLE_NAME + " (email, password, package_id) " +
-                    "VALUES ('" + req.body.email + "', '" + req.body.password + "', 1)";
+        var query = "INSERT INTO " + TABLE_NAME + " (email, password) " +
+                    "VALUES ('" + req.body.email + "', '" + req.body.password + "')";
 
         con.query(query, function(err, rows) {
            if(err) {
@@ -138,7 +137,9 @@ module.exports = function Router(connection) {
            else {
                res.status(200).json({
                    "status": true,
-                   "message": rows
+                   "message": [{
+                       "email" : req.body.email
+                    }]
                });
 
                return;

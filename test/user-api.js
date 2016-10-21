@@ -23,24 +23,6 @@ describe('Get all users', function() {
     });
 });
 
-describe('Delete user', function() {
-
-    it('delete the user stated', function(done) {
-        server
-            .delete('/api/users/test@test.com')
-            .expect(200)
-            .end(function(err, res) {
-                if(err) {
-                    throw err;
-                }
-                else {
-                    res.body.message[0].should.have.property('email');
-                }
-                done();
-            });
-    });
-});
-
 describe('Create user', function() {
     var user = { password : 'password', email : 'marcus@marcus.com'}; 
 
@@ -55,7 +37,24 @@ describe('Create user', function() {
                 }
                 else {
                     res.body.message[0].should.have.property('email');
-                    res.body.message[0].should.have.property('password');
+                }
+                done();
+            });
+    });
+});
+
+describe('Delete user', function() {
+
+    it('delete the user stated', function(done) {
+        server
+            .delete('/api/users/marcus@marcus.com')
+            .expect(200)
+            .end(function(err, res) {
+                if(err) {
+                    throw err;
+                }
+                else {
+                    res.body.message[0].should.have.property('email');
                 }
                 done();
             });
@@ -64,9 +63,9 @@ describe('Create user', function() {
 
 describe('Get one user', function() {
 
-    it('should return one users', function(done) {
+    it('should return one user', function(done) {
         server
-            .get('/api/users/1')
+            .get('/api/users/?email=asd@asd.com')
             .expect(200)
             .end(function(err, res) {
                 if(err) {
