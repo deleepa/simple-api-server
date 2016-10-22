@@ -8,6 +8,7 @@ var express = require('express');
 var log = require('debug-logger')('user-api.js');
 var validator = require('validator');
 var crypto = require('crypto');
+var database = require('../utils/database.js');
 
 //init the express router
 var router = express.Router();
@@ -27,7 +28,6 @@ module.exports = function Router(connection) {
      * @desc This method will return all the users in the table
      */
     router.get('/' , function (req, res) {
-        var con = connection();
         var query = '';
 
         //check if user is specifying an email
@@ -37,24 +37,7 @@ module.exports = function Router(connection) {
             query = 'SELECT * FROM ' + TABLE_NAME;
         }
 
-        con.query(query, function(err, rows) {
-           if(err) {
-               res.status(500).json({
-                   "status": false,
-                   "message": err
-               });
-
-               return;
-           }
-           else {
-               res.status(200).json({
-                   "status": true,
-                   "message": rows
-               });
-
-               return;
-           }
-        });
+        database.executeGetQuery(query, res);
     });
     
     router.delete('/:email', function (req, res) {
@@ -71,32 +54,12 @@ module.exports = function Router(connection) {
             return;
         }
 
-       query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"'; 
-       
-       con.query(query, function(err, result) {
-           if(err) {
-               res.status(500).json({
-                   "status": false,
-                   "message": err
-               });
+        query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"';
 
-               return;
-           }
-           else {
-               res.status(200).json({
-                   "status": true,
-                   "message": [{
-                       "email" : req.params.email
-                    }]
-               });
-
-               return;
-           }
-        });
+        database.executeQuery(query, res, req.params.email);
     });
 
     router.post('/', function (req, res) {
-        var con = connection();
         console.log('posting to user table');
         //validate email address
         if(!validator.isEmail(req.body.email)) {
@@ -125,30 +88,10 @@ module.exports = function Router(connection) {
         var query = "INSERT INTO " + TABLE_NAME + " (email, password) " +
                     "VALUES ('" + req.body.email + "', '" + encryptedPass + "')";
 
-        con.query(query, function(err, rows) {
-           if(err) {
-               res.status(500).json({
-                   "status": false,
-                   "message": err
-               });
-
-               return;
-           }
-           else {
-               res.status(200).json({
-                   "status": true,
-                   "message": [{
-                       "email" : req.body.email
-                    }]
-               });
-
-               return;
-           }
-        });
+        database.executeQuery(query, res, req.body.email);
     });
 
     router.put('/:email', function (req, res) {
-        var con = connection();
         console.log('updating user table');
 
         //validate email address
@@ -177,27 +120,7 @@ module.exports = function Router(connection) {
         var query = "UPDATE " + TABLE_NAME + " SET password = '" + encryptedPass +
                     "' WHERE email = '" + req.params.email + "'";
 
-        con.query(query, function(err, rows) {
-            if(err) {
-                res.status(500).json({
-                    "status": false,
-                    "message": err
-                });
-
-                return;
-            }
-            else {
-                res.status(200).json({
-                    "status": true,
-                    "message": [{
-                        "email" : req.params.email
-                    }]
-                });
-
-                return;
-            }
-        });
-
+        database.executeQuery(query, res, req.params.email);
     });
 
     return router;
