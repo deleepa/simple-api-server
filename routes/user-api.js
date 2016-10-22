@@ -123,7 +123,7 @@ module.exports = function Router(connection) {
         encryptedPass += cipher.final('hex');
 
         var query = "INSERT INTO " + TABLE_NAME + " (email, password) " +
-                    "VALUES ('" + req.body.email + "', '" + req.body.password + "')";
+                    "VALUES ('" + req.body.email + "', '" + encryptedPass + "')";
 
         con.query(query, function(err, rows) {
            if(err) {
@@ -150,7 +150,7 @@ module.exports = function Router(connection) {
     router.put('/:email', function (req, res) {
         var con = connection();
         console.log('updating user table');
-        
+
         //validate email address
         if(typeof req.params.email == 'undefined') {
             req.status(500).json({
