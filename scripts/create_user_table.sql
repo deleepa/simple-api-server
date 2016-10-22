@@ -8,7 +8,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `user` (`id`, `email`, `password`) VALUES ('1', 'test1@gmail.com', 'Test1'), ('2', 'test2@gmail.com', 'Test2') , ('3', 'test3@gmail.com', 'Test3'), ('4', 'test4@gmail.com', 'Test4') , ('5', 'test5@gmail.com', 'Test5');
+INSERT INTO `user` (`email`, `password`) VALUES ('test1@gmail.com', 'Test1'), ('test2@gmail.com', 'Test2') , ('test3@gmail.com', 'Test3'), ('test4@gmail.com', 'Test4') , ('test5@gmail.com', 'Test5');
 /* inserted 5 dummy users for testing purposes */
 
 /*!40101 SET character_set_client = @saved_cs_client */;
