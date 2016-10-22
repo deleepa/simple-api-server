@@ -5,10 +5,10 @@
 
 //init the required modules
 var express = require('express');
-var log = require('debug-logger')('user-api.js');
-var validator = require('validator');
-var crypto = require('crypto');
+var log = require('debug-logger')('user-api.js');;
 var database = require('../utils/database.js');
+var helper = require('../utils/helper.js');
+var validator = require('validator');
 
 //init the express router
 var router = express.Router();
@@ -28,6 +28,8 @@ module.exports = function Router(connection) {
      * @desc This method will return all the users in the table
      */
     router.get('/' , function (req, res) {
+        console.log('retrieving users');
+
         var query = '';
 
         //check if user is specifying an email
@@ -41,49 +43,22 @@ module.exports = function Router(connection) {
     });
     
     router.delete('/:email', function (req, res) {
-       var con = connection();
-       var query = '';
-       
-       //check if email is provided
-       if(typeof req.params.email == 'undefined') {
-            res.status(500).json({
-                "status": false,
-                "message": "Please provide a registered email."
-            });
+        console.log('deleting provided user from user table');
 
-            return;
-        }
+        helper.checkEmail(req.params.email, res);
 
-        query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"';
+        var query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"';
 
         database.executeQuery(query, res, req.params.email);
     });
 
     router.post('/', function (req, res) {
         console.log('posting to user table');
-        //validate email address
-        if(!validator.isEmail(req.body.email)) {
-            res.status(500).json({
-                "status": false,
-                "message": "The email provided is not valid."
-            });
 
-            return;
-        }
-        //validate password length
-        if(req.body.password.length < 8) {
-            res.status(500).json({
-                "status": false,
-                "message": "The password must be at least 8 characters."
-            });
+        helper.validateEmail(req.body.email, res);
+        helper.validatePassword(req.body.password, res);
 
-            return;
-        }
-
-        //create hash of password before inserting to db
-        var cipher = crypto.createCipher('aes192', CIPHER_SALT);
-        var encryptedPass = cipher.update(req.body.password, 'utf-8', 'hex');
-        encryptedPass += cipher.final('hex');
+        var encryptedPass = helper.encryptPassword(req.body.password);
 
         var query = "INSERT INTO " + TABLE_NAME + " (email, password) " +
                     "VALUES ('" + req.body.email + "', '" + encryptedPass + "')";
@@ -94,28 +69,10 @@ module.exports = function Router(connection) {
     router.put('/:email', function (req, res) {
         console.log('updating user table');
 
-        //validate email address
-        if(typeof req.params.email == 'undefined') {
-            req.status(500).json({
-               "status": false,
-                "message": "Please provide a registered email!"
-            });
-            return;
-        }
+        helper.checkEmail(req.params.email, res);
+        helper.validatePassword(req.body.password, res);
 
-        //validate password length
-        if(req.body.password.length < 8) {
-            res.status(500).json({
-                "status": false,
-                "message": "The password must be at least 8 characters."
-            });
-
-            return;
-        }
-
-        var cipher = crypto.createCipher('aes192', CIPHER_SALT);
-        var encryptedPass = cipher.update(req.body.password, 'utf-8', 'hex');
-        encryptedPass += cipher.final('hex');
+        var encryptedPass = helper.encryptPassword(req.body.password);
 
         var query = "UPDATE " + TABLE_NAME + " SET password = '" + encryptedPass +
                     "' WHERE email = '" + req.params.email + "'";
