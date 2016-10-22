@@ -5,10 +5,9 @@
 
 //init the required modules
 var express = require('express');
-var log = require('debug-logger')('user-api.js');;
+var log = require('debug-logger')('user-api.js');
 var database = require('../utils/database.js');
 var helper = require('../utils/helper.js');
-var validator = require('validator');
 
 //init the express router
 var router = express.Router();
@@ -45,7 +44,7 @@ module.exports = function Router(connection) {
     router.delete('/:email', function (req, res) {
         console.log('deleting provided user from user table');
 
-        helper.checkEmail(req.params.email, res);
+        helper.checkUndefinedType(req.params.email, res);
 
         var query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"';
 
@@ -69,7 +68,7 @@ module.exports = function Router(connection) {
     router.put('/:email', function (req, res) {
         console.log('updating user table');
 
-        helper.checkEmail(req.params.email, res);
+        helper.checkUndefinedType(req.params.email, res);
         helper.validatePassword(req.body.password, res);
 
         var encryptedPass = helper.encryptPassword(req.body.password);

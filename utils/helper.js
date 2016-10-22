@@ -33,11 +33,11 @@ module.exports = {
         return encryptedPass;
     },
 
-    checkEmail: function(email, res) {
-        if(typeof email == 'undefined') {
+    checkUndefinedType: function(value, res) {
+        if(typeof value == 'undefined') {
             res.status(500).json({
                 "status": false,
-                "message": "Please provide a registered email."
+                "message": "Provided value is of undefined type."
             });
             return;
         }
