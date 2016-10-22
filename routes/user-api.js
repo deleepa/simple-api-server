@@ -70,7 +70,7 @@ module.exports = function Router(connection) {
 
             return;
         }
-        
+
        query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"'; 
        
        con.query(query, function(err, result) {
@@ -145,6 +145,59 @@ module.exports = function Router(connection) {
                return;
            }
         });
+    });
+
+    router.put('/:email', function (req, res) {
+        var con = connection();
+        console.log('updating user table');
+        
+        //validate email address
+        if(typeof req.params.email == 'undefined') {
+            req.status(500).json({
+               "status": false,
+                "message": "Please provide a registered email!"
+            });
+            return;
+        }
+
+        //validate password length
+        if(req.body.password.length < 8) {
+            res.status(500).json({
+                "status": false,
+                "message": "The password must be at least 8 characters."
+            });
+
+            return;
+        }
+
+        var cipher = crypto.createCipher('aes192', CIPHER_SALT);
+        var encryptedPass = cipher.update(req.body.password, 'utf-8', 'hex');
+        encryptedPass += cipher.final('hex');
+
+        var query = "UPDATE " + TABLE_NAME + " SET password = '" + encryptedPass +
+                    "' WHERE email = '" + req.params.email + "'";
+
+        con.query(query, function(err, rows) {
+            if(err) {
+                res.status(500).json({
+                    "status": false,
+                    "message": err
+                });
+
+                return;
+            }
+            else {
+                res.status(200).json({
+                    "status": true,
+                    "message": [{
+                        "email" : req.params.email
+                    }]
+                });
+
+                return;
+            }
+        });
+
     });
 
     return router;
