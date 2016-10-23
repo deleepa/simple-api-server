@@ -34,6 +34,12 @@ npm install
 node app.js
 ```
 
+## Docker Compose Development Environment
+* Run `docker-compose up` to start the development environment
+* Run these commands to populate the database-
+    1. `docker exec -it sas-db-server /bin/bash`
+    2. `mysql simple-api-server < /tmp/scripts/create_user_table.sql`
+
 ## Tests
 
 I'm using the mocha test framework for this project.
