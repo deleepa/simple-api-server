@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  nodeserver:
+    image: node
+    container_name: sas-web-server
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 3000:3000
+    links:
+      - dbserver:mysqlhost
+    environment:
+      - NPM_INSTALL=YES
+      - DB_HOST=mysqlhost
+      - DB_USER=sasuser
+      - DB_NAME=simple-api-server
+      - DB_PASSWORD=saspassword
+    working_dir: /usr/src/app
+    command: sh ./start.sh
+  dbserver:
+    image: mysql
+    container_name: sas-db-server
+    volumes:
+      - ./scripts/:/tmp/scripts
+    environment:
+      - MYSQL_DATABASE=simple-api-server
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_USER=sasuser
+      - MYSQL_PASSWORD=saspassword
