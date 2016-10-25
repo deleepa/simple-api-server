@@ -42,7 +42,10 @@ node app.js
 
 ## Tests
 
-I'm using the mocha test framework for this project.
+I'm using the mocha test framework for this project. To run unit tests you need to be in the root directory and server must be running.
+```
+mocha test
+```
 
 ## Contributors
 
