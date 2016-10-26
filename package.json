@@ -4,7 +4,10 @@
   "description": "A simple ExpressJS based API server",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src/ -d dist/ --source-maps",
+    "watch": "babel src/ -d dist/ --source-maps --watch",
+    "node": "node dist/app.js"
   },
   "dependencies": {
     "assert": "1.3.0",
@@ -18,5 +21,10 @@
     "validator": "5.2.0"
   },
   "author": "Deleepa",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0"
+  }
 }

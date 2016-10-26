@@ -31,7 +31,8 @@ create table user (
 git clone https://github.com/deleepa/simple-api.git
 cd simple-api
 npm install
-node app.js
+npm run build
+npm run node
 ```
 
 ## Docker Compose Development Environment
