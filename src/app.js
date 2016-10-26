@@ -24,7 +24,7 @@ app.use(bodyParser.json());
  * @param  {callback} function(req, res)
  * @desc This function returns a string to tell the user to use the /api endpoints
  */
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
     res.send('hello world!');
   });
 
@@ -40,6 +40,6 @@ app.use('/api/users', userApi);
  * @param  {callback} function()
  * @desc This function starts the server
  */
-app.listen(3000, function() {
+app.listen(3000, () => {
     console.log('server is listening at port 3000..');
   });

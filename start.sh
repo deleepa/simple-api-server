@@ -3,4 +3,5 @@ then
   npm install
 fi
 
-node app.js
+npm run build
+npm run node
