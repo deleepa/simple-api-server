@@ -1,33 +1,33 @@
-var mysql = require('mysql');
-var log = require('debug-logger')('database.js');
+import mysql from 'mysql';
 
-module.exports = function Database() {
-    var config = {
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        database: process.env.DB_NAME || 'simple-api-server'
-    };
-
-    //check if the user is using a password or not
-    if(typeof connection !== undefined) {
-        config.password = process.env.DB_PASSWORD || '';
+class Database {
+    constructor() {
+        this.config = {
+            host: process.env.DB_HOST || 'localhost',
+            user: process.env.DB_USER || 'root',
+            database: process.env.DB_NAME || 'simple-api-server'
+        };
     }
 
-    //create the connection with the database
-    var connection = mysql.createConnection(config);
+    connection() {
+        //create the connection with the database
+        const connection = mysql.createConnection(this.config);
 
-    connection.connect(function(err) {
-        //failed attempt - log error
-        if(err) {
-            console.log("error: " + err.stack);
-            return null;
-        }
-        //success
-        else {
-            console.log("success");
-            return connection;
-        }
-    });
+        connection.connect(function(err) {
+            //failed attempt - log error
+            if(err) {
+                console.error('error: ' + err.stack);
+                return null;
+            }
+            //success
+            else {
+                console.log('success');
+                return connection;
+            }
+        });
 
-    return connection;
-};
+        return connection;
+    }
+}
+
+export default new Database();
