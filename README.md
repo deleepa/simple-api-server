@@ -17,7 +17,7 @@ The stack that I've used for this server is:
 
 The server is designed to connect to a MySQL database. Since most people learn SQL before any other type of database. The user table creation script can be found in the `scripts` folder. The same code is also shown below:
 
-```
+```sql
 create table user (
 	id int auto_increment not null primary key,
     email varchar(255),
@@ -27,12 +27,12 @@ create table user (
 ```
 
 ### Set up the project
-```
-git clone https://github.com/deleepa/simple-api.git
-cd simple-api
-npm install
-npm run build
-npm run node
+```bash
+$ git clone https://github.com/deleepa/simple-api.git
+$ cd simple-api
+$ npm install
+$ npm run build
+$ npm run node
 ```
 
 ## Docker Compose Development Environment
@@ -44,8 +44,9 @@ npm run node
 ## Tests
 
 I'm using the mocha test framework for this project. To run unit tests you need to be in the root directory and server must be running.
-```
-mocha test
+```bash
+$ cd dist
+$ mocha test
 ```
 
 ## Contributors
