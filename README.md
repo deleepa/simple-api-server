@@ -53,6 +53,16 @@ $ mocha test
 
 Contributors are more than welcome. The contribution guidelines aren't strict at all. Just have a look at the CONTRIBUTING.md file :)
 
+## TODO
+
+Suggested by [viqueen](https://github.com/viqueen)
+
+* convert the remaining modules
+* extract test file out of src
+* introduce test coverage
+* add git commit hook to run linter and ensure all further code addition/modifications are properly written
+* minify distribution
+
 ## License
 
 MIT.
