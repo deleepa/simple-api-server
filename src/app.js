@@ -8,7 +8,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import userApi from './routes/user-api';
 
-
 //create the express application
 const app = express();
 
