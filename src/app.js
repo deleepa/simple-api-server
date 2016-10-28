@@ -6,7 +6,7 @@
 //use require to init all the packages
 var express = require('express');
 var config = require('dotenv').config();
-var connection = require('./database');
+var connection = require('./database').default;
 var userApi = require('./routes/user-api')(connection);
 var bodyParser = require('body-parser');
 

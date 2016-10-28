@@ -1,45 +1,39 @@
-var validator = require('validator');
-var crypto = require('crypto');
+import validator from 'validator';
+import crypto from 'crypto';
 
 //salt to be used with cipher
-const CIPHER_SALT = "salt";
+const CIPHER_SALT = 'salt';
 
-module.exports = {
+export function validateEmail(email, response) {
+    if(!validator.isEmail(email)) {
+        response.status(500).json({
+            status  : false,
+            message : 'The email provided is not valid.'
+        });
+    }
+}
 
-    validateEmail: function(email, res) {
-        if(!validator.isEmail(email)) {
-            res.status(500).json({
-                "status": false,
-                "message": "The email provided is not valid."
-            });
-            return;
-        }
-    },
+export function validatePassword(password, response) {
+    if(password.length < 8) {
+        response.status(500).json({
+            status  : false,
+            message : 'The password must be at least 8 characters.'
+        });
+    }
+}
 
-    validatePassword: function(password, res) {
-        if(password.length < 8) {
-            res.status(500).json({
-                "status": false,
-                "message": "The password must be at least 8 characters."
-            });
-            return;
-        }
-    },
+export function encryptPassword(password) {
+    const cipher = crypto.createCipher('aes192', CIPHER_SALT);
+    let encryptedPass = cipher.update(password, 'utf-8', 'hex');
+    encryptedPass += cipher.final('hex');
+    return encryptedPass;
+}
 
-    encryptPassword: function(password) {
-        var cipher = crypto.createCipher('aes192', CIPHER_SALT);
-        var encryptedPass = cipher.update(password, 'utf-8', 'hex');
-        encryptedPass += cipher.final('hex');
-        return encryptedPass;
-    },
-
-    checkUndefinedType: function(value, res) {
-        if(typeof value == 'undefined') {
-            res.status(500).json({
-                "status": false,
-                "message": "Provided value is of undefined type."
-            });
-            return;
-        }
+export function checkUndefinedType(value, res) {
+    if(typeof value === 'undefined') {
+        res.status(500).json({
+            status  : false,
+            message : 'Provided value is of undefined type.'
+        });
     }
 }
