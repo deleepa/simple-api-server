@@ -38,3 +38,6 @@ dist
 #Application configuration file
 config.json
 .env
+
+#Source code
+dist
