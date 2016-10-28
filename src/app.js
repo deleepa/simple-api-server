@@ -7,7 +7,7 @@
 var express = require('express');
 var config = require('dotenv').config();
 var connection = require('./database').default;
-var userApi = require('./routes/user-api')(connection);
+var userApi = require('./routes/user-api').default;
 var bodyParser = require('body-parser');
 
 //create the express application

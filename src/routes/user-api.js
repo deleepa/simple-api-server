@@ -4,80 +4,57 @@
  */
 
 //init the required modules
-var express = require('express');
-var log = require('debug-logger')('user-api.js');
-var database = require('../utils/database.js');
-var helper = require('../utils/helper.js');
-
-//init the express router
-var router = express.Router();
+import { Router } from 'express';
+import { executeQuery, executeGetQuery } from '../utils/database';
+import { checkUndefinedType, validateEmail, validatePassword, encryptPassword } from '../utils/helper';
 
 //table name that this router is linked to
-const TABLE_NAME = "user";
+const TABLE_NAME = 'user';
 
-//salt to be used with cipher
-const CIPHER_SALT = "salt";
+class UserApiRouter extends Router {
 
-module.exports = function Router(connection) {
+    constructor() {
+        super();
 
-    console.log('setting router..');
-    /**
-     * @param  {path} '/'
-     * @param  {callback} function(req, res)
-     * @desc This method will return all the users in the table
-     */
-    router.get('/' , function (req, res) {
-        console.log('retrieving users');
+        this.get('/' , function (request, response) {
+            console.log('retrieving users');
+            let query = '';
+            //check if user is specifying an email
+            if(typeof request.query.email !== 'undefined') {
+                query = `SELECT * FROM ${TABLE_NAME} WHERE email = "${request.query.email}"`;
+            } else {
+                query = `SELECT * FROM ${TABLE_NAME}`;
+            }
+            executeGetQuery(query, response);
+        });
 
-        var query = '';
+        this.delete('/:email', function (request, response) {
+            console.log('deleting provided user from user table');
+            checkUndefinedType(request.params.email, response);
+            const query = `DELETE FROM ${TABLE_NAME} WHERE email = "${request.params.email}"`;
+            executeQuery(query, response, request.params.email);
+        });
 
-        //check if user is specifying an email
-        if(typeof req.query.email !== 'undefined') {
-            query = 'SELECT * FROM ' + TABLE_NAME + ' WHERE email = "' + req.query.email + '"';
-        } else {
-            query = 'SELECT * FROM ' + TABLE_NAME;
-        }
+        this.post('/', function (request, response) {
+            console.log('posting to user table');
+            validateEmail(request.body.email, response);
+            validatePassword(request.body.password, response);
+            const encryptedPass = encryptPassword(request.body.password);
+            const query = `INSERT INTO ${TABLE_NAME} (email, password) VALUES ("${request.body.email}", "${encryptedPass}")`;
+            executeQuery(query, response, request.body.email);
+        });
 
-        database.executeGetQuery(query, res);
-    });
-    
-    router.delete('/:email', function (req, res) {
-        console.log('deleting provided user from user table');
+        this.put('/:email', function (request, response) {
+            console.log('updating user table');
+            checkUndefinedType(request.params.email, response);
+            validatePassword(request.body.password, response);
+            const encryptedPass = encryptPassword(request.body.password);
+            const query = `UPDATE ${TABLE_NAME} SET password = "${encryptedPass}" WHERE email = "${request.params.email}"`;
+            executeQuery(query, response, request.params.email);
+        });
 
-        helper.checkUndefinedType(req.params.email, res);
+    }
 
-        var query = 'DELETE FROM ' + TABLE_NAME + ' WHERE email = "' + req.params.email + '"';
+}
 
-        database.executeQuery(query, res, req.params.email);
-    });
-
-    router.post('/', function (req, res) {
-        console.log('posting to user table');
-
-        helper.validateEmail(req.body.email, res);
-        helper.validatePassword(req.body.password, res);
-
-        var encryptedPass = helper.encryptPassword(req.body.password);
-
-        var query = "INSERT INTO " + TABLE_NAME + " (email, password) " +
-                    "VALUES ('" + req.body.email + "', '" + encryptedPass + "')";
-
-        database.executeQuery(query, res, req.body.email);
-    });
-
-    router.put('/:email', function (req, res) {
-        console.log('updating user table');
-
-        helper.checkUndefinedType(req.params.email, res);
-        helper.validatePassword(req.body.password, res);
-
-        var encryptedPass = helper.encryptPassword(req.body.password);
-
-        var query = "UPDATE " + TABLE_NAME + " SET password = '" + encryptedPass +
-                    "' WHERE email = '" + req.params.email + "'";
-
-        database.executeQuery(query, res, req.params.email);
-    });
-
-    return router;
-};
+export default new UserApiRouter();
