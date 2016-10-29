@@ -4,14 +4,12 @@
  */
 
 //use require to init all the packages
-var express = require('express');
-var config = require('dotenv').config();
-var connection = require('./database').default;
-var userApi = require('./routes/user-api')(connection);
-var bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
+import userApi from './routes/user-api';
 
 //create the express application
-var app = express();
+const app = express();
 
 //parse multipart forms : application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,9 +22,9 @@ app.use(bodyParser.json());
  * @param  {callback} function(req, res)
  * @desc This function returns a string to tell the user to use the /api endpoints
  */
-app.get('/', (req, res) => {
-    res.send('hello world!');
-  });
+app.get('/', (request, response) => {
+    response.send('hello world!');
+});
 
 /**
  * @param  {path} '/api/users'
@@ -42,4 +40,4 @@ app.use('/api/users', userApi);
  */
 app.listen(3000, () => {
     console.log('server is listening at port 3000..');
-  });
+});
